@@ -1,0 +1,14 @@
+{{extend './common/layout.art'}}
+
+{{block 'main'}}
+	<p style="font-size: 40px;text-align: center" class="bg-danger error">{{msg}}</p>
+{{/block}}
+
+{{block 'script'}}
+	<script>
+		//3秒中,自动跳转到登录页
+		setTimeout(function () {
+			location.href = "/admin/login"
+		},3000)
+	</script>
+{{/block}}

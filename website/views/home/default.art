@@ -1,0 +1,54 @@
+{{extend './common/layout.art'}}
+
+{{block 'title'}}
+<title>首页</title>
+{{/block}}
+
+{{block 'link'}}
+<link rel="stylesheet" href="css/index.css">
+{{/block}}
+
+{{block 'main'}}
+{{include './common/header.art'}}
+<!-- 文章列表开始 -->
+<ul class="list w1100">
+	{{each result.records}}
+<!--	$index 是遍历时,每个元素的下标-->
+	<li class="{{$index%2==0?'fl':'fr' }}">
+		<a href="/home/article?id={{@$value._id}}" class="thumbnail">
+			<img src="{{$value.cover}}">
+		</a>
+		<div class="content">
+			<a class="article-title" href="/home/article?id={{@$value._id}}">{{$value.title}}</a>
+			<div class="article-info">
+				<span class="author">{{$value.author.username}}</span>
+				<span>{{ dateformat($value.publishDate,'yyyy-mm-dd')}}</span>
+			</div>
+			<div class="brief">
+<!--				左边为<  右边为>  中间不能是>. 且标签文本必须1个以上.全局换
+				substr(起始位置,截取长度)  截取部分字符用于显示.后面再拼接...代表有更多字符未显示
+-->
+				{{$value.content.replace(/<[^>]+>/g,"").substr(0,90)+'...'}}
+			</div>
+		</div>
+	</li>
+	{{/each }}
+</ul>
+<!-- 文章列表结束 -->
+
+<!-- 分页开始 -->
+<div class="page w1100">
+	{{if result.page>1}}
+	<a href="/home/?page={{result.page-1}}">上一页</a>
+	{{/if}}
+	{{each result.display}}
+	<a href="/home/?page={{$value}}" class="{{$value==result.page? 'active':''}}">{{$value}}</a>
+	{{/each}}
+
+	{{if result.page<result.pages}}
+	<a href="/home/?page={{result.page-0+1}}">下一页</a>
+	{{/if}}
+</div>
+<!-- 分页结束 -->
+{{/block}}
+

@@ -1,0 +1,71 @@
+{{extend './common/layout.art'}}
+
+{{block 'main'}}
+    <div class="login-body">
+        <div class="login-container">
+            <h4 class="title">新浪博客管理员登录</h4>
+            <div class="login">
+                <form action="/admin/login" method="post" id="loginForm">
+                    <div class="form-group">
+                        <label>邮件</label>
+                        <input name="email" type="email" class="form-control" placeholder="请输入邮件地址">
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input name="password" type="password" class="form-control" placeholder="请输入密码">
+                    </div>
+                    <button type="submit" class="btn btn-primary">登录</button>
+                </form>
+            </div>
+            <div class="tips"></div>
+        </div>
+    </div>
+    <!-- /删除确认弹出框 -->
+    <script src="/admin/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/admin/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/admin/js/common.js"></script>
+    <script>
+        //做客户端邮箱,密码是否填写的校验
+        //表单提交事件
+        $("#loginForm").on("submit",function () {
+            //这个方法可以得到表单中的所有参数
+            //var f = $(this).serializeArray()
+            //console.log(f)
+            /*
+            [
+            {name: "email", value: "11@qq.com"},
+            {name: "password", value: "123456"}
+            ]
+            */
+
+            // 对上面的数据,进行处理,得到我们想要的结构 {email:xx,password:xx}
+            //var result = {}
+            //遍历数组
+            //f.forEach(function (item) {
+                //item => {name: "email", value: "11@qq.com"}
+                //result[item.name] = item.value
+                //result[email] = 11@qq.com
+            //})
+            //console.log(result)  //{email: "11@qq.com", password: "123456"}
+
+            //使用封装好的函数,来获取表单的参数
+            var result = serializeToJson( $(this) )
+            //如果邮件没有值,则报错
+            //trim()  去除字符左右两侧空格
+            if(result.email.trim().length == 0)
+            {
+                alert("请输入邮件地址")
+                return  false
+            }
+            //如果密码没有值,报错
+            if(result.password.trim().length == 0)
+            {
+                alert("请输入密码")
+                return  false
+            }
+
+            //取消表单的默认提交行为
+            //return false;
+        })
+    </script>
+{{/block}}

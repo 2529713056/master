@@ -1,0 +1,91 @@
+{{extend './common/layout.art'}}
+
+{{block 'main'}}
+    {{include './common/header.art'}}
+    <!-- 主体内容 -->
+    <div class="content">
+        {{include './common/aside.art'}}
+        <div class="main">
+            <!-- 分类标题 -->
+            <div class="title">
+                <h4>5b9a716cb2d2bf17706bcc0a</h4>
+            </div>
+            <!--      enctype 指定表单数据的编码类型
+                     普通字符:   application/x-www-form-urlencoded
+                                 name=xiaoming&age=20&sex=男
+                     二进制数据:   multipart/form-data
+                                 音频,视频,图片,txt文档
+            -->
+            <!-- /分类标题 -->
+            <form class="form-container" action="/admin/article-add" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>标题</label>
+                    <input  name="title" type="text" class="form-control" placeholder="请输入文章标题">
+                </div>
+                <div class="form-group">
+                    <label>作者</label>
+                    <!--这个字段不能编辑,取的就是当前用户的id值-->
+                    <input value="{{@userInfo._id}}" name="author" type="text" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label>发布时间</label>
+                    <input name="publishDate" type="date" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                   <label for="exampleInputFile">文章封面</label>
+                    <!--如果想上传多个文件,那么加上multiple-->
+                   <input type="file" name="cover" id="file" >
+                   <div class="thumbnail-waper">
+                       <img class="img-thumbnail" src="" id="preview">
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label>内容</label>
+                    <textarea class="form-control" id="editor" name="content"></textarea>
+                </div>
+                <div class="buttons">
+                    <input type="submit" class="btn btn-primary">
+                </div>
+            </form>
+            
+        </div>
+    </div>
+{{/block}}
+
+{{block 'script'}}
+    <script src="/admin/lib/ckeditor5/ckeditor.js"></script>
+    <script type="text/javascript">
+        let editor;
+        ClassicEditor
+            .create( document.querySelector('#editor'))
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch( error => {
+                console.error( error );
+            });
+        // 获取数据
+        // const editorData = editor.getData();
+
+        //实现上传图片的预览
+        var file = document.querySelector("#file")
+        var preview = document.querySelector("#preview")
+        //当文件输入控件,已经上传了图片
+        file.onchange = function () {
+            //1.创建文件读取对象
+            var reader = new FileReader()
+            //用户选择文件列表(数组)
+            //console.log( this.files[0] )
+            //2.读取文件.异步,所以需要监听
+            reader.readAsDataURL(this.files[0])
+            //监听onload事件.读取完毕
+            reader.onload = function () {
+                //读取结果
+                //console.log(reader.result)
+                //将读取的文件作为图片显示
+                preview.src = reader.result
+            }
+        }
+    </script>
+{{/block}}
